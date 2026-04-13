@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meme-Machine.com</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Inter", "Roboto", sans-serif;
+      background: linear-gradient(to bottom, #fffde7, #fff3cd);
+      color: #333;
+      text-align: center;
+      padding: 40px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header h1 {
+      font-size: 60px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: #d4ac0d;
+      font-family: copperplate;
+    }
+
+    .controls {
+      margin-bottom: 30px;
+    }
+
+    .controls input {
+      width: 350px;
+      height: 40px;
+      font-size: 16px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-right: 10px;
+      background-color: #fff;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      background-color: #f9e79f;
+      color: #333;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .controls button:hover {
+      background-color: #f7dc6f;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .meme-button {
+      width: 220px;
+      height: 60px;
+      border: none;
+      border-radius: 8px;
+      background-color: #fff;
+      color: #333;
+      font-size: 18px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out, transform 0.1s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .meme-button:hover {
+      background-color: #fff9c4;
+      transform: scale(1.02);
+    }
+
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      font-size: 14px;
+      color: #555;
+      border-top: 1px solid #ddd;
+    }
+
+    /* Dark mode */
+    body.dark {
+      background: #222;
+      color: #eee;
+    }
+    body.dark header h1 {
+      color: #f9e79f;
+    }
+    body.dark .controls button {
+      background-color: #444;
+      color: #eee;
+    }
+    body.dark .meme-button {
+      background-color: #333;
+      color: #eee;
+    }
+    /* Chaos flicker mode */
+    /* Chaos flicker mode */
+body.chaos {
+  transition: background 0.05s, color 0.05s;
+}
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MEMEMACHINE</h1>
+  </header>
+
+  <main>
+    <div class="controls">
+      <input type="text" id="searchBar" placeholder="Search meme name..." aria-label="Search meme"><br>
+      <button id="searchBtn">Play Meme</button>
+      <button id="randomBtn">Random Meme</button>
+      <button id="chaosBtn">Chaos Mode (EXAMS OVER)</button>
+      <button id="darkModeBtn">Toggle Dark Mode</button>
+      <button id="muteBtn">Mute/Unmute</button>
+      <button id="echoBtn">Echo Mode</button>
+<button id="reverseBtn">Reverse Mode</button>
+<button id="mashupBtn">Mashup Mode</button>
+<button id="visualizerBtn">Visualizer Mode</button>
+<button id="confettiBtn">Confetti Mode</button>
+<button id="queueBtn">Queue Mode</button>
+<button id="themeBtn">Random Theme</button>
+    </div>
+
+    <div>
+      <label for="volume">Volume:</label>
+      <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+      <label for="speed">Speed:</label>
+      <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1">
+    </div>
+
+    <div class="grid">
+      <button class="meme-button" data-meme="faahh">Faahh (1)</button>
+      <button class="meme-button" data-meme="galaxy meme">Galaxy Meme (2)</button>
+      <button class="meme-button" data-meme="among us">Among Us (3)</button>
+      <button class="meme-button" data-meme="emotional damage">Emotional Damage (4)</button>
+      <button class="meme-button" data-meme="bruh">Bruh (5)</button>
+      <button class="meme-button" data-meme="fbi">FBI Open Up (6)</button>
+      <button class="meme-button" data-meme="modi-ji-bkl">modi-ji-bkl (7)</button>
+      <button class="meme-button" data-meme="modi-ji-bhojyam">modi-ji-bhojyam (8)</button>
+      <button class="meme-button" data-meme="kimjonun-goon">kimjonun-goon (9)</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>Made by <strong>Aahan Punyani</strong></p>
+    <p>Supporters: Vihaan Bhura Anda, Manan Saluja, Ansh Baba</p>
+  </footer>
+
+  <script>
+    const memeMap = {
+      "faahh": new Audio("./sound_68c2abc71447f.mp3"),
+      "galaxy meme": new Audio("./galaxy-meme.mp3"),
+      "among us": new Audio("./among-us.mp3"),
+      "emotional damage": new Audio("./emotional_damage.mp3"),
+      "bruh": new Audio("./Bruh meme - QuickSounds.com.mp3"),
+      "fbi": new Audio("./FBI OPEN UP (with explosion) - QuickSounds.com.mp3"),
+      "modi-ji-bkl": new Audio("./modi-ji-bkl.mp3"),
+      "modi-ji-bhojyam": new Audio("./modi-ji-bhojyam.mp3"),
+      "kimjonun-goon": new Audio("./kimjonun-goon.mp3")
+    };
+
+    let muted = false;
+
+    function playMeme(name) {
+      const audio = memeMap[name];
+      if (audio) {
+        audio.volume = muted ? 0 : document.getElementById("volume").value;
+        audio.playbackRate = document.getElementById("speed").value;
+        audio.play();
+      }
+    }
+
+    document.querySelectorAll(".meme-button").forEach(button => {
+      button.addEventListener("click", () => {
+        const meme = button.dataset.meme;
+        playMeme(meme);
+      });
+    });
+
+    document.getElementById("searchBtn").addEventListener("click", () => {
+      const query = document.getElementById("searchBar").value.toLowerCase();
+      if (memeMap[query]) {
+        playMeme(query);
+      } else {
+        alert("Meme not found.");
+      }
+    });
+
+    document.getElementById("randomBtn").addEventListener("click", () => {
+      const keys = Object.keys(memeMap);
+      const randomKey = keys[Math.floor(Math.random() * keys.length)];
+      playMeme(randomKey);
+    });
+
+  document.getElementById("chaosBtn").addEventListener("click", () => {
+  // Play all memes at once
+  Object.values(memeMap).forEach(audio => {
+    audio.volume = muted ? 0 : document.getElementById("volume").value;
+    audio.playbackRate = document.getElementById("speed").value;
+    audio.currentTime = 0;
+    audio.play();
+  });
+
+  // Random color flicker effect
+  let count = 0;
+  const interval = setInterval(() => {
+    // Generate random RGB color
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+
+    // Apply random background + contrasting text color
+    document.body.style.background = `rgb(${r},${g},${b})`;
+    document.body.style.color = (r+g+b > 400) ? "#000" : "#fff";
+
+    count++;
+    if (count > 40) { // flicker 40 times then stop
+      clearInterval(interval);
+      // Reset back to normal theme
+      document.body.style.background = "";
+      document.body.style.color = "";
+    }
+  }, 80); // toggle every 80ms (fast flicker)
+});
+    document.getElementById("muteBtn").addEventListener("click", () => {
+      muted = !muted;
+    
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener("keydown", (e) => {
+      const shortcuts = {
+        "1": "faahh",
+        "2": "galaxy meme",
+        "3": "among us",
+        "4": "emotional damage",
+        "5": "bruh",
+        "6": "fbi"
+      };
+      if (shortcuts[e.key]) {
+        playMeme(shortcuts[e.key]);
+      }
+    });
+    document.getElementById("darkModeBtn").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
+
+    // Echo Mode: repeat a random meme several times
+document.getElementById("echoBtn").addEventListener("click", () => {
+  const keys = Object.keys(memeMap);
+  const randomKey = keys[Math.floor(Math.random() * keys.length)];
+  let repeats = 0;
+  const interval = setInterval(() => {
+    playMeme(randomKey);
+    repeats++;
+    if (repeats >= 5) clearInterval(interval);
+  }, 300); // every 300ms
+});
+
+// Reverse Mode: play audio backwards (using Web Audio API)
+document.getElementById("reverseBtn").addEventListener("click", () => {
+  const keys = Object.keys(memeMap);
+  const randomKey = keys[Math.floor(Math.random() * keys.length)];
+  const audio = memeMap[randomKey];
+  const context = new AudioContext();
+  fetch(audio.src)
+    .then(res => res.arrayBuffer())
+    .then(buf => context.decodeAudioData(buf))
+    .then(decoded => {
+      const reversed = decoded.getChannelData(0).slice().reverse();
+      const buffer = context.createBuffer(1, reversed.length, decoded.sampleRate);
+      buffer.copyToChannel(reversed, 0);
+      const source = context.createBufferSource();
+      source.buffer = buffer;
+      source.connect(context.destination);
+      source.start();
+    });
+});
+
+// Mashup Mode: play two random memes overlapped
+document.getElementById("mashupBtn").addEventListener("click", () => {
+  const keys = Object.keys(memeMap);
+  const key1 = keys[Math.floor(Math.random() * keys.length)];
+  const key2 = keys[Math.floor(Math.random() * keys.length)];
+  playMeme(key1);
+  playMeme(key2);
+});
+
+// Visualizer Mode: pulse background with meme playback
+document.getElementById("visualizerBtn").addEventListener("click", () => {
+  let pulses = 0;
+  const interval = setInterval(() => {
+    document.body.style.background = pulses % 2 === 0 ? "#ff0000" : "#0000ff";
+    pulses++;
+    if (pulses > 10) {
+      clearInterval(interval);
+      document.body.style.background = "";
+    }
+  }, 200);
+});
+
+// Confetti Mode: simple confetti animation
+document.getElementById("confettiBtn").addEventListener("click", () => {
+  for (let i = 0; i < 100; i++) {
+    const confetti = document.createElement("div");
+    confetti.textContent = "🎉";
+    confetti.style.position = "fixed";
+    confetti.style.left = Math.random() * window.innerWidth + "px";
+    confetti.style.top = Math.random() * window.innerHeight + "px";
+    confetti.style.fontSize = "20px";
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 2000);
+  }
+});
+
+// Queue Mode: play memes one after another
+document.getElementById("queueBtn").addEventListener("click", () => {
+  const keys = Object.keys(memeMap);
+  let index = 0;
+  function playNext() {
+    if (index < keys.length) {
+      const audio = memeMap[keys[index]];
+      audio.onended = playNext;
+      playMeme(keys[index]);
+      index++;
+    }
+  }
+  playNext();
+});
+
+// Random Theme Mode: change background theme per meme
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const themes = [
+    "linear-gradient(to right, #ff9a9e, #fad0c4)",
+    "linear-gradient(to right, #a1c4fd, #c2e9fb)",
+    "linear-gradient(to right, #fbc2eb, #a6c1ee)",
+    "linear-gradient(to right, #ffecd2, #fcb69f)"
+  ];
+  document.body.style.background = themes[Math.floor(Math.random() * themes.length)];
+});
+  </script>
+</body>
+</html>
